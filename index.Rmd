@@ -1,6 +1,6 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAMES HERE"
+title: "Anime Visualization"
+author: "Haozhong Zheng and Weixun Qian"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
