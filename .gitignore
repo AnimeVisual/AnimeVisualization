@@ -7,3 +7,4 @@ data/anime.csv
 data/reviews.csv
 data/watching_status.csv
 data/profiles.csv
+data/.DS_Store
