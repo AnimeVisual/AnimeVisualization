@@ -30,3 +30,5 @@ anime-by-genre
 recommendation
 potential-problems
 conclusion
+app-link-with-our-final-project.
+app-link

@@ -1,6 +1,6 @@
 # Interactive component
 
-The following is the interactive [app website](https://tonyz.shinyapps.io/AnimeVisulization/) with our final project.
+## [App Link](https://tonyz.shinyapps.io/AnimeVisulization/)
 
 ## Overview
 By developing this Shiny app, we aim to provide a smooth experience for beginners to find their favorite animes, and some exploraion choices for anime experts to find more interesting animes. We decide to implemented three functions: Anime trending and search, random anime recommendation, as well as a tuned recommendation system that looks for anime that people with similar interests like.
