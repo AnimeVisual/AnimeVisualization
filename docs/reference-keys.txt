@@ -14,3 +14,6 @@ sentiment-analysis
 heatmap
 cluster-plot
 pca
+data-import-and-basic-examination
+deal-with-missing-values-in-the-profile-dataset
+deal-with-missing-values-in-the-ratings-dataset
