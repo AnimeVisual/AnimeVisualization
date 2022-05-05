@@ -96,7 +96,20 @@
 <li class="chapter" data-level="5.1.1" data-path="results.html"><a href="results.html#heatmap"><i class="fa fa-check"></i><b>5.1.1</b> Heatmap<span></span></a></li>
 <li class="chapter" data-level="5.1.2" data-path="results.html"><a href="results.html#cluster-plot"><i class="fa fa-check"></i><b>5.1.2</b> Cluster Plot<span></span></a></li>
 <li class="chapter" data-level="5.1.3" data-path="results.html"><a href="results.html#pca"><i class="fa fa-check"></i><b>5.1.3</b> PCA<span></span></a></li>
+<li class="chapter" data-level="5.1.4" data-path="results.html"><a href="results.html#bar-chart"><i class="fa fa-check"></i><b>5.1.4</b> Bar Chart<span></span></a></li>
 </ul></li>
+<li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#score-distribution-analysis"><i class="fa fa-check"></i><b>5.2</b> Score Distribution Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="results.html"><a href="results.html#overall-score-by-genres"><i class="fa fa-check"></i><b>5.2.1</b> Overall Score by Genres<span></span></a></li>
+<li class="chapter" data-level="5.2.2" data-path="results.html"><a href="results.html#overall-score-by-types"><i class="fa fa-check"></i><b>5.2.2</b> Overall Score by Types<span></span></a></li>
+<li class="chapter" data-level="5.2.3" data-path="results.html"><a href="results.html#overall-average-score-by-genrestypes"><i class="fa fa-check"></i><b>5.2.3</b> Overall Average Score by Genres/Types<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#score-indicator-analysis"><i class="fa fa-check"></i><b>5.3</b> Score Indicator Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="results.html"><a href="results.html#score-indicator-by-genres"><i class="fa fa-check"></i><b>5.3.1</b> Score Indicator by Genres<span></span></a></li>
+<li class="chapter" data-level="5.3.2" data-path="results.html"><a href="results.html#score-indicator-by-genres-1"><i class="fa fa-check"></i><b>5.3.2</b> Score Indicator by Genres<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="results.html"><a href="results.html#anime-episodes-overtime"><i class="fa fa-check"></i><b>5.4</b> Anime Episodes Overtime<span></span></a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component<span></span></a>
 <ul>
@@ -132,7 +145,7 @@
 <h2><span class="header-section-number">5.1</span> Sentiment Analysis<a href="results.html#sentiment-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="heatmap" class="section level3 hasAnchor" number="5.1.1">
 <h3><span class="header-section-number">5.1.1</span> Heatmap<a href="results.html#heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>During the data processing part, we apply sentiment analysis using <a href="http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm">NRC Sentiment lexion</a>. “The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing.”</p>
+<p>During the data processing part, we apply sentiment analysis using <a href="http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm">NRC Sentiment lexion</a>. “The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (<code>anger</code>, <code>fear</code>, <code>anticipation</code>, <code>trust</code>, <code>surprise</code>, <code>sadness</code>, <code>joy</code>, and <code>disgust</code>) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing.”</p>
 <p>We then plot the average sentiment values with respect to different genres of anime to see any patterns of reviews.</p>
 <p><img src="finalproj_files/figure-html/Sentiment-1.png" width="3500" style="display: block; margin: auto;" /></p>
 <p>We can see some of the interesting patterns:</p>
@@ -148,7 +161,7 @@
 <p>We plot the sentiment cluster plot to see any patterns or cluster among these anime genres.
 <img src="finalproj_files/figure-html/Cluster-1.png" width="3500" style="display: block; margin: auto;" /></p>
 <ul>
-<li>The cluster plot gives us the cluster of emotions of reviewers. As we can see from the heatmap, <strong>Yaoi</strong> and <strong>Yuri</strong> has the most change in “surprise” and “trust”. Therefore they are in the same cluster.</li>
+<li>The cluster plot gives us the cluster of emotions of reviewers. As we can see from the heatmap, <strong>Yaoi</strong> and <strong>Yuri</strong> has the most change in <code>surprise</code> and <code>trust</code>. Therefore they are in the same cluster.</li>
 <li>For some genres like <strong>Vampire</strong>, <strong>Demons</strong>, <strong>Super Power</strong>, <strong>Magic</strong> and <strong>Psychological</strong>, they are in the same cluster. Which make sense.</li>
 <li><strong>Cars</strong> and <strong>Thriller</strong> change mostly in some sentiment from the heatmap, so they are in the same cluster.</li>
 <li>For some genres like <strong>Shoujo</strong>, <strong>Shounen Ai</strong>, <strong>Harem</strong> and <strong>Hentai</strong>, they are in the same cluster. These are all some types of animes with small group of audiences.</li>
@@ -157,15 +170,93 @@
 <div id="pca" class="section level3 hasAnchor" number="5.1.3">
 <h3><span class="header-section-number">5.1.3</span> PCA<a href="results.html#pca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Finally we plot the PCA plot.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-59-1.png" width="3500" style="display: block; margin: auto;" /></p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-14-1.png" width="3500" style="display: block; margin: auto;" /></p>
 <ul>
 <li>From the plot, <strong>Yuri</strong>, <strong>Yaoi</strong>, <strong>Shounen Ai</strong> and <strong>Cars</strong> are most likely outliers to our dataset.</li>
 <li>The <code>surprise</code> indicator is most positively correlated with <code>trust</code></li>
 <li>The <code>anger</code> indicator is most uncorrelated with <code>trust</code></li>
 <li>The <code>fear</code> indicator is most negatively correlated with <code>trust</code></li>
 </ul>
-
 </div>
+<div id="bar-chart" class="section level3 hasAnchor" number="5.1.4">
+<h3><span class="header-section-number">5.1.4</span> Bar Chart<a href="results.html#bar-chart" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We draw the bar plot with facet to user score with the overall eight sentiment score to see if there are any patterns. The median score of our dataset is about 8, therefore we facet the plot with socre greater or equal to 8 and less than 8.</p>
+<p><img src="finalproj_files/figure-html/Bar-1.png" width="3500" style="display: block; margin: auto;" /></p>
+<p>We found that:</p>
+<ul>
+<li>For review score <strong>Less than eight</strong>, there are more <em>negative</em> sentiment average score, eg. <code>anger</code>, <code>disgust</code>, <code>fear</code> and <code>sadness</code> than that or <strong>Greater or equal to eight</strong>.</li>
+<li>For review score <strong>Greater or equal to eight</strong>, there are more <em>positive</em> sentimant average score, eg. <code>joy</code>, <code>suprise</code> and <code>trust</code>.</li>
+</ul>
+</div>
+</div>
+<div id="score-distribution-analysis" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Score Distribution Analysis<a href="results.html#score-distribution-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="overall-score-by-genres" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Overall Score by Genres<a href="results.html#overall-score-by-genres" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Firstly we plot the overall socre density plot to see if there are any patterns between scores and anime genres:</p>
+<p><img src="finalproj_files/figure-html/Density%20Plot-1.png" width="3500" style="display: block; margin: auto;" />
+From the plot we can see that:</p>
+<ul>
+<li>Most of Genres socre density are left-skewed.</li>
+<li>Some potential outliers may be <strong>Josei</strong>, <strong>Yaoi</strong>, <strong>Yuri</strong>, <strong>Shoujo Ai</strong>, <strong>Shounen Ai</strong> and <strong>Thriller</strong>. These types of genres usually only have some groups of audiences.</li>
+<li>Most of the animes have relatively higher scores (eg. greater than 7) distribution than scores lower than 7.</li>
+</ul>
+</div>
+<div id="overall-score-by-types" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Overall Score by Types<a href="results.html#overall-score-by-types" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Secondly we plot the overall score violin plot to see if there are any patterns between scores and anime types:</p>
+<p><img src="finalproj_files/figure-html/Violin%20Plot-1.png" width="3500" style="display: block; margin: auto;" />
+From the plot we can see that:</p>
+<ul>
+<li><strong>TV</strong> and <strong>OVA</strong> have more higher score (eg. greater than 7) and less lower score distribution than other types. Besides, the distribution between <strong>TV</strong> and <strong>OVA</strong> is similar. This may because <strong>OVA</strong> is a type of anime usually works as an additional episodes for <strong>TV</strong> anime.</li>
+<li><strong>ONA</strong> have the least anime scores since these types of anime are relatively uncommon, usually sponsored by private customers instead of anime company.</li>
+</ul>
+</div>
+<div id="overall-average-score-by-genrestypes" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Overall Average Score by Genres/Types<a href="results.html#overall-average-score-by-genrestypes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Finally in this section we plot the Cleveland dot plot to see the average overall score among different genres and types:</p>
+<p><img src="finalproj_files/figure-html/Dot%20Plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We found that:</p>
+<ul>
+<li><strong>ONA</strong> and <strong>Special</strong> tend to have a relatively large span of anime overall score. The shape of these types is “S” shape.</li>
+<li>For some of the genres in <strong>Music</strong>, such as <strong>Samurai</strong> and <strong>Parody</strong>, their overall average is almost the same. This is because they are to some extent similiar genres. The same pattern we can see from <strong>Magic</strong>, <strong>Horror</strong> and <strong>Demons</strong>, which are also very similiar. Therefore a problem with this is that once we may have repeated anime genres, some other types of genres may be ignored.</li>
+<li><strong>Samurai</strong> anime tend to have a relatively large average overall score.</li>
+<li><strong>Dementia</strong> anime tend to have a relatively low average overall score.</li>
+</ul>
+</div>
+</div>
+<div id="score-indicator-analysis" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Score Indicator Analysis<a href="results.html#score-indicator-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>From our dataset, each review not only has an anime overall score, but also has different indicators scores: <code>story</code>, <code>animation</code>, <code>sound</code>, <code>character</code>, <code>enjoyment</code>. In this part of analysis, we tend to focus on the relationship between these indicators and anime genres/types.</p>
+<div id="score-indicator-by-genres" class="section level3 hasAnchor" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> Score Indicator by Genres<a href="results.html#score-indicator-by-genres" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We firstly focus on the relationship between anime genres and these indicators:</p>
+<p><img src="finalproj_files/figure-html/Parallel%20Coordinates-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>##                     Outlier1 Outlier2 Outlier3
+## Potential Outliers Shoujo Ai    Josei  Vampire</code></pre>
+<ul>
+<li>We observe that <strong>Shoujo Ai</strong>, <strong>Josei</strong> and <strong>Vampire</strong> anime are potential outliers.</li>
+<li>There one main cluster.</li>
+<li>All of these indicators seems to be uncorrelated with each other in terms of genres.</li>
+</ul>
+</div>
+<div id="score-indicator-by-genres-1" class="section level3 hasAnchor" number="5.3.2">
+<h3><span class="header-section-number">5.3.2</span> Score Indicator by Genres<a href="results.html#score-indicator-by-genres-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We then focus on the relationship between anime genres and these indicators:</p>
+<p><img src="finalproj_files/figure-html/Mosaic-1.png" width="672" style="display: block; margin: auto;" />
+We observe that there are some associations between anime type and core indicators since we can see different distribution pattern due to different anime types.</p>
+</div>
+</div>
+<div id="anime-episodes-overtime" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Anime Episodes Overtime<a href="results.html#anime-episodes-overtime" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The final section we want to focus on the change of animation overtime. We calculate the average episodes for each type of anime. We drop anime whose types are <strong>Movie</strong> and <strong>Music</strong> since these types of animation usually have only one episode. We plot the multiple line chart of average episodes of anime by time:</p>
+<p><img src="finalproj_files/figure-html/Multiple%20Line%20Chart-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We found that:</p>
+<ul>
+<li>The episodes of <strong>TV</strong> and <strong>OVA</strong> are decreasing. As a anime fan, I can feel the trend by myself. For example, when I was a child, some of the famous anime I watched have hundreds of episodes. For example, “Dragon Ball” and “Naruto”. When I went to high school, some of the animation I watched have fewer episodes, or in other words, 25 episodes a season. “Attack on titan” and “Steins Gate” may be the famous example. When I graduate from college, the episodes of anime, however, have decreased again. Many anime nowadays only have 12 or 13 episodes a season.</li>
+<li>There is another trending that the episodes of <strong>ONA</strong>, Original Net Animation, or in other words, web animation, have increased sharply. The development of internet and mobile devices accounts for this type of trending. It becomes more and more easier watching anime online than before. More people choose to watch anime on mobile devices instead of watch on TV.</li>
+</ul>
+
 </div>
 </div>
             </section>
