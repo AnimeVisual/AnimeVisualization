@@ -1,14 +1,14 @@
 # Missing values
 
+In this part, we deal with missing values from two datasets: Anime Rating and User Profile. Since the myAnimeList website maintains a well-structured database, most of its entries are complete, except for some unavoidable data entries. We will examine the two datasets and see if there are some patterns in it.
 
+## Data import and basic examination
 ```{r}
 # Import the required library
 library(tidyverse)
 library(ggplot2)
 library(mi)
-```
-
-```{r, echo=FALSE}
+library(redav)
 rating = read_csv("data/animeRating.csv")
 profile = read_csv("data/profiles.csv")
 rating = rating[,2:dim(rating)[2]]
@@ -17,7 +17,7 @@ head(rating)
 head(profile)
 ```
 
-
+## Deal with missing values in the profile dataset
 ```{r}
 row_na_profile = rowSums(is.na(profile)) %>%
   sort(decreasing = TRUE)
@@ -26,14 +26,68 @@ ggplot(data = row_na_profile, aes(row_na_profile))+
   geom_histogram(binwidth = 0.5)+
   labs(title = "histogram of the missing values in profiles", x = "number of missing values in a row")
 ```
+
+From the plot above, we could see that the largest proportion of rows are complete, but there are still a considerable amount of rows which have 1,2,3 missing values, and we will examine column distribution of missing values.
+
+```{r}
+col_na_profile = colSums(is.na(profile)) %>%
+  sort(decreasing = TRUE)
+data.frame(col_na_profile)
+```
+From the table we could see that the age, birthday, and gender columns all have a lot of missing values, while the profile, favorite_anime  and num_favorite columns are all filled with informative values.
+
+Next, we examine the missing value distribution in a more broad perspective, as the dataset is too large and not feasible for this plot, we sampled only 200 rows randomly, which qualifies to display the general trend of the data. From the plot we could see that the three columns have large ratio of missing values, this makes sense since these three rows are all sensitive information of the users and some of them may not be willing to share this information, and all anime-related columns are filled completely, which meets our expectation.
+
+```{r}
+tidy_profile <- profile[sample(1:dim(profile)[1],200), 1:dim(profile)[2]] %>% 
+    rownames_to_column("key_name") %>% 
+    gather(key, value, -key_name) %>% 
+    mutate(missing = ifelse(is.na(value), "yes", "no"))
+ggplot(tidy_profile, aes(x = key, y = fct_rev(key_name), fill = missing)) +
+  geom_tile(color = "white") + 
+  ggtitle("NA values in Profile data") +
+  labs(x = "column name", y = "row")+
+  scale_fill_viridis_d() + # discrete scale
+  theme_bw()+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+With the plot_missing function, we could see five different missing patterns (if any column is missing). The largest portion of data is complete, and the most common missing pattern is that all three columns that involve sensitive information (age, birthday and gender) are missing, then is age and birthday, other missing patterns are relatively uncommon.
+
+```{r}
+plot_missing(profile)
+```
+
+## Deal with missing values in the ratings dataset
+
+Next, we examine the missing values in the rating dataset. From the table below, we could see that slightly more than half of the dataset is complete, but there are still considerable amount of rows that have at least one missing value. This makes sense in the website description, since some of the users may mark the watching status of a certain anime, but they may not rate it right away, which leads to a large portion of unrated anime in the rating database.
+
 ```{r}
 row_na_rating = rowSums(is.na(rating)) %>%
   sort(decreasing = TRUE)
-
-
+row_na_rating = data.frame(row_na_rating)
+data.frame(table(row_na_rating))
 ```
 
+Next, we examine the missing pattern among columns. We could see that most of the missing values lie in the rating column, and very few lie in the watching_status column. The first point has been addressed in the previous paragraph, and the second point makes sense because users may very rarely mark the watching status as an invalid value that cannot be correctly encoded by the system, which leads to the 165 missing values in this column.
+
 ```{r}
+col_na_rating = colSums(is.na(rating)) %>%
+  sort(decreasing = TRUE)
+data.frame(col_na_rating)
+```
 
+Similar to the last part, we have to sample the dataset to make the plot, and we could see that almost all missing values lie in the rating column.
 
+```{r}
+tidy_rating <- rating[sample(1:dim(rating)[1],200), 1:dim(rating)[2]] %>% 
+    rownames_to_column("key_name") %>% 
+    gather(key, value, -key_name) %>% 
+    mutate(missing = ifelse(is.na(value), "yes", "no"))
+ggplot(tidy_rating, aes(x = key, y = fct_rev(key_name), fill = missing)) +
+  geom_tile(color = "white") + 
+  ggtitle("NA values in rating data") +
+  labs(x = "column name", y = "row")+
+  scale_fill_viridis_d() + # discrete scale
+  theme_bw()+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
