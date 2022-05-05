@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+data/animeRating.csv
+data/anime.csv
+data/reviews.csv
+data/watching_status.csv
+data/profiles.csv
