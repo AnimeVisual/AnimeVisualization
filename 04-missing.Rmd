@@ -1,1 +1,39 @@
 # Missing values
+
+
+```{r}
+# Import the required library
+library(tidyverse)
+library(ggplot2)
+library(mi)
+```
+
+```{r, echo=FALSE}
+rating = read_csv("data/animeRating.csv")
+profile = read_csv("data/profiles.csv")
+rating = rating[,2:dim(rating)[2]]
+profile = profile[, 3:dim(profile)[2]]
+head(rating)
+head(profile)
+```
+
+
+```{r}
+row_na_profile = rowSums(is.na(profile)) %>%
+  sort(decreasing = TRUE)
+row_na_profile = data.frame(row_na_profile)
+ggplot(data = row_na_profile, aes(row_na_profile))+
+  geom_histogram(binwidth = 0.5)+
+  labs(title = "histogram of the missing values in profiles", x = "number of missing values in a row")
+```
+```{r}
+row_na_rating = rowSums(is.na(rating)) %>%
+  sort(decreasing = TRUE)
+
+
+```
+
+```{r}
+
+
+```
