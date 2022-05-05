@@ -1,2 +1,6 @@
 # Data sources
 
+## Description of dataset
+We will develop a web crawler to get data from [MyAnimeList](https://myanimelist.net/), a professional anime rating website in Europe and North America. According to [Wikipedia](https://en.wikipedia.org/wiki/MyAnimeList), the site received 120 million visitors a month in 2015. The dataset will include several tables, the first one is the **Anime table** (anime ID, name, average rating, genre and synopsis), the second one is the **watching status table** (user_id, anime_id, watching_status, watched_episodes), the last one is the **review table** (user_id, anime_id, review_text, review_score)
+
+![Anime](figs/anime.png)

@@ -90,7 +90,7 @@ fviz_cluster(km.res,
              show.clust.cent=FALSE)
 ```
 
-- The cluster plot gives us the cluster of emotions of reviewers. As we can see from the heatmap, **Yaoi** and **Yuri** has the most change in "surprise" and "trust". Therefore they are in the same cluster.
+- The cluster plot gives us the cluster of emotions of reviewers. As we can see from the heatmap, **Yaoi** and **Yuri** has the most change in `surprise` and `trust`. Therefore they are in the same cluster.
 - For some genres like **Vampire**, **Demons**, **Super Power**, **Magic** and **Psychological**, they are in the same cluster. Which make sense.
 - **Cars** and **Thriller** change mostly in some sentiment from the heatmap, so they are in the same cluster.
 - For some genres like **Shoujo**, **Shounen Ai**, **Harem** and **Hentai**, they are in the same cluster. These are all some types of animes with small group of audiences.
