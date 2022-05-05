@@ -5,3 +5,12 @@ missing-values
 results
 interactive-component
 conclusion
+overview
+introduction-1
+anime-by-genre
+recommendation
+potential-problems
+sentiment-analysis
+heatmap
+cluster-plot
+pca
