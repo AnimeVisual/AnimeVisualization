@@ -1,1 +1,123 @@
 # Results
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align='center')
+
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+library(factoextra)
+library(redav)
+```
+
+## Sentiment Analysis
+### Heatmap
+During the data processing part, we apply sentiment analysis using [NRC Sentiment lexion](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm). “The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing.”
+
+We then plot the average sentiment values with respect to different genres of anime to see any patterns of reviews.
+
+```{r Sentiment, dpi = 500}
+reviews <- read.csv("data/reviews.csv")
+anime <- read.csv("data/anime.csv")
+anime <- anime %>%
+  dplyr::select(MAL_ID, Genres)
+
+anime_join <-  merge(reviews, anime, by.x = "uid", by.y = "MAL_ID") %>%
+        separate_rows(Genres, sep = ",") %>% 
+        mutate(Genres = str_trim(Genres, side = "both")) %>%
+        filter(Genres != "Unknown")
+
+presid.summary <- anime_join %>%
+group_by(Genres) %>%
+   summarise(
+    anger=mean(anger),
+    anticipation=mean(anticip),
+    disgust=mean(disgust),
+    fear=mean(fear),
+    joy=mean(joy),
+    sadness=mean(sadness),
+    surprise=mean(surprise),
+    trust=mean(trust)
+  ) %>%
+  pivot_longer(anger:trust, names_to = "Sentiment", values_to = "Value")
+
+presid.summary %>%
+  ggplot(aes( y = fct_rev(Sentiment), x = Genres, fill = Value)) +
+  geom_tile(color = "white") +
+  coord_fixed() +
+  scale_fill_gradientn(colors = hcl.colors(20, "RdYlGn")) +
+    labs(title = "Heatmap of the Sentiment",
+       subtitle = "over Genres for all animes",
+       y = "Sentiment",
+       x = "Genres",
+       fill = "Value") +
+  theme(axis.text.x = element_text(angle = 90))
+  
+```
+
+We can see some of the interesting patterns:
+
+- From the Sentiment heatmap of animes by genres, we found that most of the animes have the sentiment with trust and joy. Which, are two of the most positive emotions. 
+- For anime in **Advantures**, there are more `joy` and `trust` than other genres', and less `anger`, `disgust` and `sadness`. These make sense since most of the animes belong to this genre tend to give audiences a feeling of excitement and happiness.
+- For anime in **Yaoi**, there are more `surprise` than other genres. This also make sense since many of these animes are made by anime lovers instead of original authors. Audiences may feel surprised seeing different stories compared to the orignial ones.
+- For anime in **Shoujo Ai**, there are less `trust` and more `fear` than other genres. This might because many of the audiences are children or adolescents. This type of genre, however, may not be appropriate for those audiences. Reviewers may express their concerns towards these genre.
+
+### Cluster Plot
+We plot the sentiment cluster plot to see any patterns or cluster among these anime genres.
+```{r Cluster, dpi=500}
+presid.summary <- anime_join %>%
+group_by(Genres) %>%
+   summarise(
+    anger=mean(anger),
+    anticipation=mean(anticip),
+    disgust=mean(disgust),
+    fear=mean(fear),
+    joy=mean(joy),
+    sadness=mean(sadness),
+    surprise=mean(surprise),
+    trust=mean(trust)
+  )
+
+presid.summary=as.data.frame(presid.summary)
+rownames(presid.summary) <- as.character((presid.summary[,1]))
+
+km.res=kmeans(presid.summary[,-1], iter.max=200,
+              4)
+fviz_cluster(km.res, 
+             stand=F, repel= TRUE,
+             data = presid.summary[,-1], xaxt="n",
+             show.clust.cent=FALSE)
+```
+
+- The cluster plot gives us the cluster of emotions of reviewers. As we can see from the heatmap, **Yaoi** and **Yuri** has the most change in "surprise" and "trust". Therefore they are in the same cluster.
+- For some genres like **Vampire**, **Demons**, **Super Power**, **Magic** and **Psychological**, they are in the same cluster. Which make sense.
+- **Cars** and **Thriller** change mostly in some sentiment from the heatmap, so they are in the same cluster.
+- For some genres like **Shoujo**, **Shounen Ai**, **Harem** and **Hentai**, they are in the same cluster. These are all some types of animes with small group of audiences.
+
+
+### PCA
+Finally we plot the PCA plot.
+
+```{r, dpi = 500}
+presid.summary <- presid.summary <- anime_join %>%
+group_by(Genres) %>%
+   summarise(
+    anger=mean(anger),
+    anticipation=mean(anticip),
+    disgust=mean(disgust),
+    fear=mean(fear),
+    joy=mean(joy),
+    sadness=mean(sadness),
+    surprise=mean(surprise),
+    trust=mean(trust)
+  ) %>%
+  mutate(across(where(is.numeric), ~round((.x-mean(.x))/sd(.x), 2))) %>%
+  dplyr::select(-anticipation)
+draw_biplot(presid.summary, "trust")
+```
+
+- From the plot, **Yuri**, **Yaoi**, **Shounen Ai** and **Cars** are most likely outliers to our dataset.
+- The `surprise` indicator is most positively correlated with `trust`
+- The `anger` indicator is most uncorrelated with `trust`
+- The `fear` indicator is most negatively correlated with `trust`

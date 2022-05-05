@@ -23,7 +23,7 @@
 <meta name="author" content="Haozhong Zheng and Weixun Qian" />
 
 
-<meta name="date" content="2022-04-05" />
+<meta name="date" content="2022-05-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -76,8 +76,23 @@
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources<span></span></a></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation<span></span></a></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values<span></span></a></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results<span></span></a></li>
-<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component<span></span></a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#sentiment-analysis"><i class="fa fa-check"></i><b>5.1</b> Sentiment Analysis<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="results.html"><a href="results.html#heatmap"><i class="fa fa-check"></i><b>5.1.1</b> Heatmap<span></span></a></li>
+<li class="chapter" data-level="5.1.2" data-path="results.html"><a href="results.html#cluster-plot"><i class="fa fa-check"></i><b>5.1.2</b> Cluster Plot<span></span></a></li>
+<li class="chapter" data-level="5.1.3" data-path="results.html"><a href="results.html#pca"><i class="fa fa-check"></i><b>5.1.3</b> PCA<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component<span></span></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview<span></span></a></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#introduction-1"><i class="fa fa-check"></i><b>6.2</b> Introduction<span></span></a></li>
+<li class="chapter" data-level="6.3" data-path="interactive-component.html"><a href="interactive-component.html#anime-by-genre"><i class="fa fa-check"></i><b>6.3</b> Anime by Genre<span></span></a></li>
+<li class="chapter" data-level="6.4" data-path="interactive-component.html"><a href="interactive-component.html#recommendation"><i class="fa fa-check"></i><b>6.4</b> Recommendation<span></span></a></li>
+<li class="chapter" data-level="6.5" data-path="interactive-component.html"><a href="interactive-component.html#potential-problems"><i class="fa fa-check"></i><b>6.5</b> Potential Problems<span></span></a></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion<span></span></a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -100,7 +115,44 @@
             <section class="normal" id="section-">
 <div id="results" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Results<a href="results.html#results" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="sentiment-analysis" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Sentiment Analysis<a href="results.html#sentiment-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="heatmap" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Heatmap<a href="results.html#heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>During the data processing part, we apply sentiment analysis using <a href="http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm">NRC Sentiment lexion</a>. “The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing.”</p>
+<p>We then plot the average sentiment values with respect to different genres of anime to see any patterns of reviews.</p>
+<p><img src="finalproj_files/figure-html/Sentiment-1.png" width="3500" style="display: block; margin: auto;" /></p>
+<p>We can see some of the interesting patterns:</p>
+<ul>
+<li>From the Sentiment heatmap of animes by genres, we found that most of the animes have the sentiment with trust and joy. Which, are two of the most positive emotions.</li>
+<li>For anime in <strong>Advantures</strong>, there are more <code>joy</code> and <code>trust</code> than other genres’, and less <code>anger</code>, <code>disgust</code> and <code>sadness</code>. These make sense since most of the animes belong to this genre tend to give audiences a feeling of excitement and happiness.</li>
+<li>For anime in <strong>Yaoi</strong>, there are more <code>surprise</code> than other genres. This also make sense since many of these animes are made by anime lovers instead of original authors. Audiences may feel surprised seeing different stories compared to the orignial ones.</li>
+<li>For anime in <strong>Shoujo Ai</strong>, there are less <code>trust</code> and more <code>fear</code> than other genres. This might because many of the audiences are children or adolescents. This type of genre, however, may not be appropriate for those audiences. Reviewers may express their concerns towards these genre.</li>
+</ul>
+</div>
+<div id="cluster-plot" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Cluster Plot<a href="results.html#cluster-plot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We plot the sentiment cluster plot to see any patterns or cluster among these anime genres.
+<img src="finalproj_files/figure-html/Cluster-1.png" width="3500" style="display: block; margin: auto;" /></p>
+<ul>
+<li>The cluster plot gives us the cluster of emotions of reviewers. As we can see from the heatmap, <strong>Yaoi</strong> and <strong>Yuri</strong> has the most change in “surprise” and “trust”. Therefore they are in the same cluster.</li>
+<li>For some genres like <strong>Vampire</strong>, <strong>Demons</strong>, <strong>Super Power</strong>, <strong>Magic</strong> and <strong>Psychological</strong>, they are in the same cluster. Which make sense.</li>
+<li>For some genres like <strong>Shounen Ai</strong>, <strong>Harem</strong> and <strong>Hentai</strong>, they are in the same cluster. These are all some types of animes with small group of audiences mostly males.</li>
+</ul>
+</div>
+<div id="pca" class="section level3 hasAnchor" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> PCA<a href="results.html#pca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Finally we plot the PCA plot.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-5-1.png" width="3500" style="display: block; margin: auto;" /></p>
+<ul>
+<li>From the plot, <strong>Yuri</strong>, <strong>Yaoi</strong>, <strong>Shounen Ai</strong> and <strong>Cars</strong> are most likely outliers to our dataset.</li>
+<li>The <code>surprise</code> indicator is most positively correlated with <code>trust</code></li>
+<li>The <code>anger</code> indicator is most uncorrelated with <code>trust</code></li>
+<li>The <code>fear</code> indicator is most negatively correlated with <code>trust</code></li>
+</ul>
 
+</div>
+</div>
 </div>
             </section>
 
