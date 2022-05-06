@@ -24,11 +24,10 @@ score-indicator-by-genres
 score-indicator-by-genres-1
 anime-episodes-overtime
 interactive-component
+app-link
 overview
 introduction-1
 anime-by-genre
 recommendation
 potential-problems
 conclusion
-app-link-with-our-final-project.
-app-link
