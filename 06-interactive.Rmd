@@ -3,7 +3,7 @@
 ## [App Link](https://tonyz.shinyapps.io/AnimeVisulization/)
 
 ## Overview
-By developing this Shiny app, we aim to provide a smooth experience for beginners to find their favorite animes, and some exploraion choices for anime experts to find more interesting animes. We decide to implemented three functions: Anime trending and search, random anime recommendation, as well as a tuned recommendation system that looks for anime that people with similar interests like.
+By developing this Shiny app, we aim to provide a smooth experience for beginners to find their favorite animes, and some exploraion choices for anime experts to find more interesting animes. We decide to implemented three functions: Anime trending and search, random anime recommendation, as well as a tuned recommendation system that looks for anime that people with similar interests like. 
 
 ## Introduction
 
@@ -20,4 +20,4 @@ This page is to give our customer a overview of the mean score of animes by genr
 - We select 4000 users' favorite lists which contain anime lists sorted by time and popularity. We treat each anime name as a word and use Markov Assumption to infer the relationship between animes. We apply bigrams and trigrams models to give the customers a choice of writing down one or two anime they like. Our tab will return a list of anime ordered by probability and popularity. These are the animes users put in their favorite lists after the anime the customer typed in. <img width="1891" alt="image" src="https://user-images.githubusercontent.com/45897080/165627362-ed528f94-4ea4-4152-8f9f-73f8eac4e148.png">
 
 ## Potential Problems
-Our data set is realatively large, so it may take a long time for the website to show all of our results. 
+The APP may not load fast since it's slow to process all the datasets and graphs in an online manner, please be patient and wait for some time before the charts/graphs show up, thank you so much for your patience!

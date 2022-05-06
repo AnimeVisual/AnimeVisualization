@@ -19,7 +19,7 @@ library(ggridges)
 ### Heatmap
 During the data processing part, we apply sentiment analysis using [NRC Sentiment lexion](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm). “The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (`anger`, `fear`, `anticipation`, `trust`, `surprise`, `sadness`, `joy`, and `disgust`) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing.”
 
-We then plot the average sentiment values with respect to different genres of anime to see any patterns of reviews.
+We encoded the review texts by assigning each word a sentiment vector, and the overall sentiment of a paragraph is the sum of all forming words. We then plot the average sentiment values with respect to reviews for different genres of anime to see any patterns of reviews, with the heatmap, we could see the emotion distribution of users towards each genre of anime.
 
 ```{r Sentiment, dpi = 500}
 reviews <- read.csv("data/reviews.csv")
@@ -60,15 +60,15 @@ presid.summary %>%
   
 ```
 
-We can see some of the interesting patterns:
+We can find some of the interesting patterns from the heatmap above:
 
 - From the Sentiment heatmap of animes by genres, we found that most of the animes have the sentiment with trust and joy. Which, are two of the most positive emotions. 
 - For anime in **Advantures**, there are more `joy` and `trust` than other genres', and less `anger`, `disgust` and `sadness`. These make sense since most of the animes belong to this genre tend to give audiences a feeling of excitement and happiness.
-- For anime in **Yaoi**, there are more `surprise` than other genres. This also make sense since many of these animes are made by anime lovers instead of original authors. Audiences may feel surprised seeing different stories compared to the orignial ones.
-- For anime in **Shoujo Ai**, there are less `trust` and more `fear` than other genres. This might because many of the audiences are children or adolescents. This type of genre, however, may not be appropriate for those audiences. Reviewers may express their concerns towards these genre.
+- For anime in **Yaoi**, there are more `surprise` than other genres. This also makes sense since many of these animes are made by anime lovers instead of original authors. Audience may feel surprised seeing different stories compared to the original ones.
+- For anime in **Shoujo Ai**, there are less `trust` and more `fear` than other genres. The reason might be that many of the audiences are children or adolescents. This type of genre, however, may not be appropriate for those audience. Reviewers may express their concerns towards these genres.
 
 ### Cluster Plot
-We plot the sentiment cluster plot to see any patterns or cluster among these anime genres.
+With the emotion and sentiment matrix we obtained before, we then cluster the animes according to the sentiments and did a sentiment cluster plot to see any patterns or clusters among these anime genres.
 ```{r Cluster, dpi=500}
 presid.summary <- anime_join %>%
 group_by(Genres) %>%
@@ -94,14 +94,14 @@ fviz_cluster(km.res,
              show.clust.cent=FALSE)
 ```
 
-- The cluster plot gives us the cluster of emotions of reviewers. As we can see from the heatmap, **Yaoi** and **Yuri** has the most change in `surprise` and `trust`. Therefore they are in the same cluster.
+- The cluster plot gives us the cluster of genres with respect to the emotions of reviewers. As we can see from the heatmap, **Yaoi** and **Yuri** has the most change in `surprise` and `trust`. Therefore they are in the same cluster.
 - For some genres like **Vampire**, **Demons**, **Super Power**, **Magic** and **Psychological**, they are in the same cluster. Which make sense.
 - **Cars** and **Thriller** change mostly in some sentiment from the heatmap, so they are in the same cluster.
 - For some genres like **Shoujo**, **Shounen Ai**, **Harem** and **Hentai**, they are in the same cluster. These are all some types of animes with small group of audiences.
 
 
 ### PCA
-Finally we plot the PCA plot.
+We also conducted PCA analysis to the dataset, and we could see some interesting findings in the plot below.
 
 ```{r, dpi = 500}
 presid.summary <- presid.summary <- anime_join %>%
@@ -121,7 +121,7 @@ group_by(Genres) %>%
 draw_biplot(presid.summary, "trust")
 ```
 
-- From the plot, **Yuri**, **Yaoi**, **Shounen Ai** and **Cars** are most likely outliers to our dataset.
+- From the plot, **Yuri**, **Yaoi**, **Shounen Ai** and **Cars** are most likely outliers in our dataset.
 - The `surprise` indicator is most positively correlated with `trust`
 - The `anger` indicator is most uncorrelated with `trust`
 - The `fear` indicator is most negatively correlated with `trust`
@@ -161,8 +161,8 @@ anime_score %>%
 
 We found that:
 
-- For review score **Less than eight**, there are more *negative* sentiment average score, eg. `anger`, `disgust`, `fear` and `sadness` than that or **Greater or equal to eight**.
-- For review score **Greater or equal to eight**, there are more *positive* sentimant average score, eg. `joy`, `suprise` and `trust`.
+- For review score **Less than eight**, there are more *negative* sentiment average score, eg. `anger`, `disgust`, `fear` and `sadness` than that of **Greater or equal to eight**.
+- For review score **Greater or equal to eight**, there are more *positive* sentiment average score, eg. `joy`, `suprise` and `trust`.
 
 ## Score Distribution Analysis
 ### Overall Score by Genres
@@ -191,7 +191,7 @@ From the plot we can see that:
 
 
 ### Overall Score by Types
-Secondly we plot the overall score violin plot to see if there are any patterns between scores and anime types:
+Secondly we plot the overall score with violin plot to see if there are any patterns between scores and anime types:
 
 ```{r Violin Plot, dpi = 500}
 ggplot(anime_join, aes(x = Type,
@@ -204,7 +204,7 @@ ggplot(anime_join, aes(x = Type,
 ```
 From the plot we can see that:
 
-- **TV** and **OVA** have more higher score (eg. greater than 7) and less lower score distribution than other types. Besides, the distribution between **TV** and **OVA** is similar. This may because **OVA** is a type of anime usually works as an additional episodes for **TV** anime. 
+- **TV** and **OVA** have more higher scores (e.g. greater than 7) and fewer lower scores distribution than other types. Besides, the distribution between **TV** and **OVA** is similar. This may be because **OVA** is a type of anime that usually works as additional episodes for **TV** anime. 
 - **ONA** have the least anime scores since these types of anime are relatively uncommon, usually sponsored by private customers instead of anime company. 
 
 ### Overall Average Score by Genres/Types
@@ -229,13 +229,13 @@ ggplot(anime_overall, aes(x = mean_score, y = fct_reorder(genre, mean_score))) +
 We found that:
 
 - **ONA** and **Special** tend to have a relatively large span of anime overall score. The shape of these types is "S" shape.
-- For some of the genres in **Music**, such as **Samurai** and **Parody**, their overall average is almost the same. This is because they are to some extent similiar genres. The same pattern we can see from **Magic**, **Horror** and **Demons**, which are also very similiar. Therefore a problem with this is that once we may have repeated anime genres, some other types of genres may be ignored.
-- **Samurai** anime tend to have a relatively large average overall score.
-- **Dementia** anime tend to have a relatively low average overall score.
+- For some of the genres in **Music**, such as **Samurai** and **Parody**, their overall average is almost the same. This is because they are to some extent similar genres. The same pattern we can see from **Magic**, **Horror** and **Demons**, which are also very similar. Therefore a problem with this is that once we may have repeated anime genres, some other types of genres may be ignored.
+- **Samurai** anime tends to have a relatively high average overall score.
+- **Dementia** anime tends to have a relatively low average overall score.
 
 ## Score Indicator Analysis
 
-From our dataset, each review not only has an anime overall score, but also has  different indicators scores: `story`, `animation`, `sound`, `character`, `enjoyment`. In this part of analysis, we tend to focus on the relationship between these indicators and anime genres/types.
+From our dataset, each review not only has an anime overall score, but also has different indicators scores: `story`, `animation`, `sound`, `character`, `enjoyment`. In this part of analysis, we tend to focus on the relationship between these indicators and anime genres/types.
 
 ### Score Indicator by Genres
 We firstly focus on the relationship between anime genres and these indicators:
@@ -271,7 +271,7 @@ print(out)
 ```
 
 - We observe that **Shoujo Ai**, **Josei** and **Vampire** anime are potential outliers.
-- There one main cluster.
+- There is one main cluster.
 - All of these indicators seems to be uncorrelated with each other in terms of genres.
 
 ### Score Indicator by Genres
@@ -328,4 +328,4 @@ anime_year %>%
 We found that:
 
 - The episodes of **TV** and **OVA** are decreasing. As a anime fan, I can feel the trend by myself. For example, when I was a child, some of the famous anime I watched have hundreds of episodes. For example, "Dragon Ball" and "Naruto". When I went to high school, some of the animation I watched have fewer episodes, or in other words, 25 episodes a season. "Attack on titan" and "Steins Gate" may be the famous example. When I graduate from college, the episodes of anime, however, have decreased again. Many anime nowadays only have 12 or 13 episodes a season.
-- There is another trending that the episodes of **ONA**, Original Net Animation, or in other words, web animation, have increased sharply. The development of internet and mobile devices accounts for this type of trending. It becomes more and more easier watching anime online than before. More people choose to watch anime on mobile devices instead of watch on TV.
+- There is another trending that the episodes of **ONA**, Original Net Animation, or in other words, web animation, have increased sharply. The development of internet and mobile devices accounts for this type of trending. It becomes more and more easier watching anime online than before. More people choose to watch anime on mobile devices instead of watching on TV.
