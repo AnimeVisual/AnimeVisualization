@@ -9,11 +9,15 @@ library(ggplot2)
 library(stringr)
 library(factoextra)
 library(redav)
+library(GGally)
+library(vcd)
+library(RColorBrewer)
+library(ggridges)
 ```
 
 ## Sentiment Analysis
 ### Heatmap
-During the data processing part, we apply sentiment analysis using [NRC Sentiment lexion](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm). “The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing.”
+During the data processing part, we apply sentiment analysis using [NRC Sentiment lexion](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm). “The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (`anger`, `fear`, `anticipation`, `trust`, `surprise`, `sadness`, `joy`, and `disgust`) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing.”
 
 We then plot the average sentiment values with respect to different genres of anime to see any patterns of reviews.
 
@@ -21,12 +25,12 @@ We then plot the average sentiment values with respect to different genres of an
 reviews <- read.csv("data/reviews.csv")
 anime <- read.csv("data/anime.csv")
 anime <- anime %>%
-  dplyr::select(MAL_ID, Genres)
+  dplyr::select(MAL_ID, Genres, Type)
 
 anime_join <-  merge(reviews, anime, by.x = "uid", by.y = "MAL_ID") %>%
         separate_rows(Genres, sep = ",") %>% 
         mutate(Genres = str_trim(Genres, side = "both")) %>%
-        filter(Genres != "Unknown")
+        filter(Genres != "Unknown", Type != "Unknown")
 
 presid.summary <- anime_join %>%
 group_by(Genres) %>%
@@ -47,8 +51,8 @@ presid.summary %>%
   geom_tile(color = "white") +
   coord_fixed() +
   scale_fill_gradientn(colors = hcl.colors(20, "RdYlGn")) +
-    labs(title = "Heatmap of the Sentiment",
-       subtitle = "over Genres for all animes",
+    labs(title = "Heatmap",
+       subtitle = "Sentiment over Genres for all animes",
        y = "Sentiment",
        x = "Genres",
        fill = "Value") +
@@ -121,3 +125,207 @@ draw_biplot(presid.summary, "trust")
 - The `surprise` indicator is most positively correlated with `trust`
 - The `anger` indicator is most uncorrelated with `trust`
 - The `fear` indicator is most negatively correlated with `trust`
+
+### Bar Chart
+We draw the bar plot with facet to user score with the overall eight sentiment score to see if there are any patterns. The median score of our dataset is about 8, therefore we facet the plot with socre greater or equal to 8 and less than 8.
+
+```{r Bar, dpi = 500}
+anime_score <- reviews %>%
+  mutate(score_facet = ifelse(score >= 8, "Greater or equal to eight", "Less than eight")) %>%
+  group_by(score_facet) %>%
+     summarise(
+    anger=mean(anger),
+    anticipation=mean(anticip),
+    disgust=mean(disgust),
+    fear=mean(fear),
+    joy=mean(joy),
+    sadness=mean(sadness),
+    surprise=mean(surprise),
+    trust=mean(trust)
+  ) %>%
+  pivot_longer(anger:trust, names_to = "Sentiment", values_to = "Value")
+
+fill.use = factor(anime_score$Sentiment)
+  
+anime_score %>%
+  ggplot(aes(x = fct_rev(factor(Sentiment)), y = Value, fill = fill.use)) +
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~factor(score_facet, levels = c("Less than eight", "Greater or equal to eight"))) +
+  coord_flip() +
+  labs(title = "Bar Chart",
+       subtitle = "Average socre for eight sentiment with different score level",
+       x = "Score",
+       y = "Sentiment",
+       fill = "Sentiment")
+```
+
+We found that:
+
+- For review score **Less than eight**, there are more *negative* sentiment average score, eg. `anger`, `disgust`, `fear` and `sadness` than that or **Greater or equal to eight**.
+- For review score **Greater or equal to eight**, there are more *positive* sentimant average score, eg. `joy`, `suprise` and `trust`.
+
+## Score Distribution Analysis
+### Overall Score by Genres
+
+Firstly we plot the overall socre density plot to see if there are any patterns between scores and anime genres:
+
+```{r Density Plot, dpi = 500}
+anime_join %>%
+  ggplot(aes(x = score, y = ..density..)) +
+  geom_histogram(color = "blue", fill = "black", bins = 20) +
+facet_wrap(~reorder(Genres, -score, median), nrow = 6, strip.position = "right") +
+  theme(strip.placement = "outside",
+        strip.background = element_blank(),
+        strip.text = element_text(face = "bold"),
+        axis.text.x = element_text(angle = 90)) +
+  labs(title = "Density Plot",
+       subtitle = "Overall Anime Score with respect to different genres",
+       x = "Score",
+       y = "Density")
+```
+From the plot we can see that:
+
+- Most of Genres socre density are left-skewed.
+- Some potential outliers may be **Josei**, **Yaoi**, **Yuri**, **Shoujo Ai**, **Shounen Ai** and **Thriller**. These types of genres usually only have some groups of audiences.
+- Most of the animes have relatively higher scores (eg. greater than 7) distribution than scores lower than 7.
+
+
+### Overall Score by Types
+Secondly we plot the overall score violin plot to see if there are any patterns between scores and anime types:
+
+```{r Violin Plot, dpi = 500}
+ggplot(anime_join, aes(x = Type,
+                  y = score, fill = fct_rev(Type))) +
+    geom_violin(adjust = 6) + 
+    labs(title = "Violin Plot",
+         subtitle = "Overall Anime Score by Types", 
+         x = "Type", y = "Score", fill = "Type") +
+    coord_flip() + theme_grey(14)
+```
+From the plot we can see that:
+
+- **TV** and **OVA** have more higher score (eg. greater than 7) and less lower score distribution than other types. Besides, the distribution between **TV** and **OVA** is similar. This may because **OVA** is a type of anime usually works as an additional episodes for **TV** anime. 
+- **ONA** have the least anime scores since these types of anime are relatively uncommon, usually sponsored by private customers instead of anime company. 
+
+### Overall Average Score by Genres/Types
+Finally in this section we plot the Cleveland dot plot to see the average overall score among different genres and types:
+
+```{r Dot Plot, fig.height=20}
+anime_overall <- anime_join %>%
+  group_by(Genres, Type) %>%
+  summarise(mean_score = mean(score)) %>%
+  mutate(genre = paste(Genres, Type, sep = "_"))
+ggplot(anime_overall, aes(x = mean_score, y = fct_reorder(genre, mean_score))) +
+  geom_point(color = "blue") +
+  facet_grid(Type~., scales = "free_y", space = "free_y") +
+  theme_linedraw() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()) +
+  labs(title = "Cleveland Dot plot",
+       subtitle = "Overall Average Anime Score by Genres and Types",
+         y = "Genres", x = "Average Overall Score")
+```
+
+We found that:
+
+- **ONA** and **Special** tend to have a relatively large span of anime overall score. The shape of these types is "S" shape.
+- For some of the genres in **Music**, such as **Samurai** and **Parody**, their overall average is almost the same. This is because they are to some extent similiar genres. The same pattern we can see from **Magic**, **Horror** and **Demons**, which are also very similiar. Therefore a problem with this is that once we may have repeated anime genres, some other types of genres may be ignored.
+- **Samurai** anime tend to have a relatively large average overall score.
+- **Dementia** anime tend to have a relatively low average overall score.
+
+## Score Indicator Analysis
+
+From our dataset, each review not only has an anime overall score, but also has  different indicators scores: `story`, `animation`, `sound`, `character`, `enjoyment`. In this part of analysis, we tend to focus on the relationship between these indicators and anime genres/types.
+
+### Score Indicator by Genres
+We firstly focus on the relationship between anime genres and these indicators:
+
+```{r Parallel Coordinates}
+anime_indicator <- anime_join %>%
+  dplyr::select(story:Genres) %>%
+  group_by(Genres) %>%
+  summarise(animation = mean(animation), character = mean(character), enjoyment = mean(enjoyment), 
+            story = mean(story), sound = mean(sound))
+anime_indicator %>%
+  ggparcoord(
+           alphaLines = .5, # alpha blending
+           scale = "uniminmax") + # rescaling
+  geom_vline(xintercept = 2:7) +
+  scale_y_continuous("rating", breaks = 0:10) %>%
+  labs(title = "Static Parallel Coordinates Plot",
+       subtitle = "Average score indicators for different genres",
+       x = "Score Indicators",
+       y = "Score")
+```
+
+```{r Show Outliers}
+# show outliers
+out1=which.min(anime_indicator$animation)
+out2=which.max(anime_indicator$animation)
+out3=which.max(anime_indicator$enjoyment)
+out <- data.frame(Outlier1 = anime_indicator$Genres[out1],
+Outlier2 = anime_indicator$Genres[out2],
+Outlier3 = anime_indicator$Genres[out3])
+row.names(out) <- c("Potential Outliers")
+print(out)
+```
+
+- We observe that **Shoujo Ai**, **Josei** and **Vampire** anime are potential outliers.
+- There one main cluster.
+- All of these indicators seems to be uncorrelated with each other in terms of genres.
+
+### Score Indicator by Genres
+
+We then focus on the relationship between anime genres and these indicators:
+
+```{r Mosaic}
+anime_indicator <- anime_join %>%
+  dplyr::select(story:Type) %>%
+  dplyr::select(-Genres) %>%
+  dplyr::select(-anime_uid) %>%
+  group_by(Type) %>%
+  summarise(animation = mean(animation), character = mean(character), enjoyment = mean(enjoyment), 
+            story = mean(story), sound = mean(sound)) %>%
+  pivot_longer(animation:sound, names_to = "Score Indicator", values_to = "Value") %>%
+  mutate(Value = (Value - min(Value))/(max(Value) - min(Value))) %>%
+  mutate(Type = factor(Type, levels = c("Movie", "Music", "ONA", "OVA", "Special", "TV")),
+         `Score_Indicator` = factor(`Score Indicator`, levels = c("animation", "character", "enjoyment",
+                                                             "story", "sound")))
+animeType <- xtabs(Value~Score_Indicator+Type, anime_indicator)
+fills5 <- rev(brewer.pal(5, 'BuPu'))
+vcd::mosaic(Score_Indicator~Type,
+            animeType,
+            direction = c("v","h"),
+            labeling = labeling_border(tl_labels = c(FALSE, TRUE),  # move labels to bottom  
+            rot_labels = c(0,0,45,45)), # all horizontal
+            highlighting_fill = rev(fills5),
+            main = "Association between anime type and score indicator")
+```
+We observe that there are some associations between anime type and core indicators since we can see different distribution pattern due to different anime types.
+
+## Anime Episodes Overtime
+The final section we want to focus on the change of animation overtime. We calculate the average episodes for each type of anime. We drop anime whose types are **Movie** and **Music** since these types of animation usually have only one episode. We plot the multiple line chart of average episodes of anime by time: 
+
+```{r Multiple Line Chart, fig.height=10}
+year <- read.csv("data/year.csv")
+anime_year <- year %>%
+  filter(Type != "Unknown" & Type != "Music") %>%
+  group_by(Year, Type) %>%
+  summarise(Episodes = mean(Episodes))
+
+anime_year %>%
+  ggplot(aes(Year, Episodes)) +
+  geom_line(aes(col = Type), lwd = 1) +
+  #scale_x_date(date_breaks = "5 year", date_labels = "%Y") +
+  theme_gray(14) +
+  facet_wrap(~Type, scales = "free_y", ncol = 1) +
+  labs(title = "Multiple line chart", 
+       subtitle = "of episodes of animation by type overtime",
+       x = "Year",
+       y = "Episodes")
+```
+
+We found that:
+
+- The episodes of **TV** and **OVA** are decreasing. As a anime fan, I can feel the trend by myself. For example, when I was a child, some of the famous anime I watched have hundreds of episodes. For example, "Dragon Ball" and "Naruto". When I went to high school, some of the animation I watched have fewer episodes, or in other words, 25 episodes a season. "Attack on titan" and "Steins Gate" may be the famous example. When I graduate from college, the episodes of anime, however, have decreased again. Many anime nowadays only have 12 or 13 episodes a season.
+- There is another trending that the episodes of **ONA**, Original Net Animation, or in other words, web animation, have increased sharply. The development of internet and mobile devices accounts for this type of trending. It becomes more and more easier watching anime online than before. More people choose to watch anime on mobile devices instead of watch on TV.

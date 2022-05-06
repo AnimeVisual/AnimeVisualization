@@ -14,6 +14,15 @@ sentiment-analysis
 heatmap
 cluster-plot
 pca
+bar-chart
+score-distribution-analysis
+overall-score-by-genres
+overall-score-by-types
+overall-average-score-by-genrestypes
+score-indicator-analysis
+score-indicator-by-genres
+score-indicator-by-genres-1
+anime-episodes-overtime
 interactive-component
 overview
 introduction-1
@@ -21,3 +30,5 @@ anime-by-genre
 recommendation
 potential-problems
 conclusion
+app-link-with-our-final-project.
+app-link
