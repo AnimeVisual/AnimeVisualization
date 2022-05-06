@@ -1,3 +1,3 @@
 # Data transformation
 
-The data transformation and cleaning are all processed [here](Data Preprocessing.html).
+The data transformation and cleaning are all processed [here](Data Preprocessing.html). All the processing work is clearly commented, please check it out for details.
